@@ -1,25 +1,104 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="BeautifulTextField_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yA2-Qm-N9h">
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Default" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KmO-z0-bM3" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="N1q-5g-Yic"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Secure" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-fQ-L7E" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="RX1-xF-ek3"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Centered" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o8M-6q-qxV" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="fXD-nt-ITS"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Right aligned" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="J0K-Bc-z5m" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="ewf-P8-StW"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Clear button" textAlignment="right" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="b7v-kh-jKe" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="h4I-iU-QVW"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="o8M-6q-qxV" secondAttribute="trailing" id="BaZ-4H-nHz"/>
+                                    <constraint firstAttribute="trailing" secondItem="J0K-Bc-z5m" secondAttribute="trailing" id="DhU-ff-MTm"/>
+                                    <constraint firstItem="rfk-fQ-L7E" firstAttribute="top" secondItem="KmO-z0-bM3" secondAttribute="bottom" constant="10" id="HsU-sg-93S"/>
+                                    <constraint firstAttribute="trailing" secondItem="b7v-kh-jKe" secondAttribute="trailing" id="ILk-6D-DnW"/>
+                                    <constraint firstItem="o8M-6q-qxV" firstAttribute="top" secondItem="rfk-fQ-L7E" secondAttribute="bottom" constant="10" id="KQz-S4-Fyj"/>
+                                    <constraint firstAttribute="trailing" secondItem="KmO-z0-bM3" secondAttribute="trailing" id="KbS-K6-Alm"/>
+                                    <constraint firstItem="b7v-kh-jKe" firstAttribute="leading" secondItem="yA2-Qm-N9h" secondAttribute="leading" id="M5C-eQ-5JZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="rfk-fQ-L7E" secondAttribute="trailing" id="Mdz-9w-PWa"/>
+                                    <constraint firstItem="J0K-Bc-z5m" firstAttribute="leading" secondItem="yA2-Qm-N9h" secondAttribute="leading" id="RiV-Kz-2VM"/>
+                                    <constraint firstItem="rfk-fQ-L7E" firstAttribute="leading" secondItem="yA2-Qm-N9h" secondAttribute="leading" id="SzV-3d-0jg"/>
+                                    <constraint firstItem="o8M-6q-qxV" firstAttribute="leading" secondItem="yA2-Qm-N9h" secondAttribute="leading" id="UDP-r7-pSV"/>
+                                    <constraint firstAttribute="width" constant="300" id="Wwf-Nd-cxO"/>
+                                    <constraint firstItem="b7v-kh-jKe" firstAttribute="top" secondItem="J0K-Bc-z5m" secondAttribute="bottom" constant="10" id="enl-0N-yru"/>
+                                    <constraint firstAttribute="bottom" secondItem="b7v-kh-jKe" secondAttribute="bottom" id="gSs-Ei-hJL"/>
+                                    <constraint firstItem="KmO-z0-bM3" firstAttribute="top" secondItem="yA2-Qm-N9h" secondAttribute="top" id="lVf-1t-T2h"/>
+                                    <constraint firstItem="J0K-Bc-z5m" firstAttribute="top" secondItem="o8M-6q-qxV" secondAttribute="bottom" constant="10" id="oW6-De-9rZ"/>
+                                    <constraint firstItem="KmO-z0-bM3" firstAttribute="leading" secondItem="yA2-Qm-N9h" secondAttribute="leading" id="zXY-e3-1TZ"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtn-JP-J7Q">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="yA2-Qm-N9h" firstAttribute="top" secondItem="dtn-JP-J7Q" secondAttribute="bottom" constant="20" id="L9Z-1w-UO7"/>
+                            <constraint firstItem="yA2-Qm-N9h" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="OIf-Tu-kxH"/>
+                            <constraint firstItem="dtn-JP-J7Q" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="OqJ-kp-BYZ"/>
+                            <constraint firstItem="yA2-Qm-N9h" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="xHJ-sq-Vur"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="36" y="37.331334332833585"/>
         </scene>
     </scenes>
 </document>
