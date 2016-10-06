@@ -1,5 +1,5 @@
 PODS:
-  - BeautifulTextField (0.1.0)
+  - BeautifulTextField (0.9.1)
   - Nimble (5.0.0)
   - Quick (0.10.0)
 
@@ -13,10 +13,10 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BeautifulTextField: 00a84f69a409f719e4906752254bc9a6737c03df
+  BeautifulTextField: 9df1b0cb143b7147387ad91dcffb0fca7b167557
   Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
   Quick: 5d290df1c69d5ee2f0729956dcf0fd9a30447eaa
 
-PODFILE CHECKSUM: 9ae4c13dd851852e64ce835fd8b6ecaa497afd80
+PODFILE CHECKSUM: 848b1dc410a9c5210e8fce2111e0f55375c3b8b5
 
 COCOAPODS: 1.1.0.rc.2

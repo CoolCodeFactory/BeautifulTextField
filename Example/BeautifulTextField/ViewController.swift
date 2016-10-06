@@ -15,7 +15,9 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        // Do any additional setup after loading the view, typically from a nib
+        
+        
         emailTextField.errorValidationHandler = { text in
             let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
             
@@ -28,11 +30,5 @@ class ViewController: UIViewController {
             }
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }
 

@@ -10,7 +10,7 @@ import UIKit
 
 
 
-open class BaseBeautifulTextField: UITextField {
+@IBDesignable open class BaseBeautifulTextField: UITextField {
     
     // MARK: - States
     public enum TextFieldStateType {
@@ -26,6 +26,8 @@ open class BaseBeautifulTextField: UITextField {
     open private(set) var textFieldStateType: TextFieldStateType = .display
     open private(set) var textStateType: TextStateType = .empty
 
+    
+    @IBInspectable var animationDuration: TimeInterval = 0.2
     
     // MARK: - Border
     open weak private(set) var borderView: UIView!
@@ -59,6 +61,13 @@ open class BaseBeautifulTextField: UITextField {
         }
     }
     
+    private var placeholderFont: UIFont? {
+        if let font = font {
+            return font.withSize(font.pointSize * placeholderFontScale)
+        }
+        return nil
+    }
+    
     @IBInspectable open var placeholderColor: UIColor = .black {
         didSet {
             updatePlaceholder()
@@ -77,6 +86,7 @@ open class BaseBeautifulTextField: UITextField {
         }
     }
     
+    
     open override var textAlignment: NSTextAlignment {
         didSet {
             placeholderLabel.textAlignment = textAlignment
@@ -84,7 +94,7 @@ open class BaseBeautifulTextField: UITextField {
     }
     
     // MARK: - Error handling
-    @IBInspectable open var errorColor: UIColor = .red
+    open var errorColor: UIColor = .red
     
     open var errorValidationHandler: (String) -> (String?) = { _ in
         return nil
@@ -119,11 +129,6 @@ open class BaseBeautifulTextField: UITextField {
         self.addTarget(self, action: #selector(textFieldDidEndEditing), for: UIControlEvents.editingDidEnd)
         self.addTarget(self, action: #selector(textFieldTextDidChange), for: UIControlEvents.editingChanged)
         
-        super.borderStyle = .none
-        
-        _placeholder = super.placeholder
-        super.placeholder = nil
-        
         let _bottomBorderView = UIView(frame: .zero)
         addSubview(_bottomBorderView)
         bottomBorderView = _bottomBorderView
@@ -135,12 +140,11 @@ open class BaseBeautifulTextField: UITextField {
         let _placeholderLabel = UILabel(frame: .zero)
         addSubview(_placeholderLabel)
         placeholderLabel = _placeholderLabel
-        placeholderLabel.textAlignment = textAlignment
+
+        borderStyle = .none
         
-        textFieldTextDidChange()
-        textFieldDidEndEditing()
-        updateBorder()
-        updatePlaceholder()
+        _placeholder = super.placeholder
+        super.placeholder = nil
         
         if hasText {
             configureTextField(forTextFieldStateType: .display, forTextStateType: .notEmpty, animated: false)
@@ -162,30 +166,44 @@ open class BaseBeautifulTextField: UITextField {
         
         updateBorder()
         updatePlaceholder()
-        configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
+        configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
     }
     
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
-        let offsetY = placeholderLabel.bounds.height + 5
+        let offsetY: CGFloat
+        if let placeholderFont = placeholderFont {
+            offsetY = placeholderFont.lineHeight + 5
+        } else {
+            offsetY = 0
+        }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
         return finalRect
     }
     
     open override func editingRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.editingRect(forBounds: bounds)
-        let offsetY = placeholderLabel.bounds.height + 5
+        let offsetY: CGFloat
+        if let placeholderFont = placeholderFont {
+            offsetY = placeholderFont.lineHeight + 5
+        } else {
+            offsetY = 0
+        }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
         return finalRect
     }
     
     open override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.clearButtonRect(forBounds: bounds)
-        let offsetY = placeholderLabel.bounds.height + 5
+        let offsetY: CGFloat
+        if let placeholderFont = placeholderFont {
+            offsetY = placeholderFont.lineHeight + 5
+        } else {
+            offsetY = 0
+        }
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
         return finalRect
     }
-
     
     // MARK: - Private
     @objc private func textFieldDidBeginEditing() {
@@ -215,42 +233,6 @@ open class BaseBeautifulTextField: UITextField {
         validate()
     }
     
-    private func updateBorder() {
-        configureBorder(forTextFieldStateType: textFieldStateType)
-    }
-    
-    private func updatePlaceholder() {
-        configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
-    }
-    
-    private func configureBorder(forTextFieldStateType textFieldStateType: TextFieldStateType) {
-        if let text = text, !text.isEmpty {
-            placeholderLabel.text = errorValidationHandler(text) ?? placeholder
-        }
-        if let font = font {
-            placeholderLabel.font = font.withSize(font.pointSize * placeholderFontScale)
-        }
-        
-        let size = placeholderLabel.sizeThatFits(bounds.size)
-        placeholderLabel.frame.size.height = size.height
-
-        switch textFieldStateType {
-        case .entry:
-            bottomBorderView.frame = CGRect(x: 0, y: bounds.maxY - borderWidth, width: bounds.width, height: borderWidth)
-            bottomBorderView.backgroundColor = borderInactiveColor
-            
-            borderView.frame = CGRect(x: 0, y: bounds.maxY - borderWidth, width: bounds.width, height: borderWidth)
-            borderView.backgroundColor = borderActiveColor
-            
-        case .display:
-            bottomBorderView.frame = CGRect(x: 0, y: bounds.maxY - borderWidth, width: bounds.width, height: borderWidth)
-            bottomBorderView.backgroundColor = borderInactiveColor
-
-            borderView.frame = CGRect(x: 0, y: bounds.maxY - borderWidth, width: 0, height: borderWidth)
-            borderView.backgroundColor = borderActiveColor
-        }
-    }
-    
     private func validate() {
         if isFirstResponder, let text = text, !text.isEmpty {
             if let error = errorValidationHandler(text) {
@@ -265,8 +247,49 @@ open class BaseBeautifulTextField: UITextField {
             placeholderLabel.textColor = placeholderColor
         }
     }
+
+    private func updateBorder() {
+        configureBorder(forTextFieldStateType: textFieldStateType)
+    }
+    
+    private func updatePlaceholder() {
+        configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
+    }
+    
+    private func configureBorder(forTextFieldStateType textFieldStateType: TextFieldStateType) {
+        switch textFieldStateType {
+        case .entry:
+            bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
+            bottomBorderView.layer.cornerRadius = bottomBorderView.bounds.height / 2
+            bottomBorderView.backgroundColor = borderInactiveColor
+            
+            borderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
+            borderView.layer.cornerRadius = borderView.bounds.height / 2
+            borderView.backgroundColor = borderActiveColor
+            
+        case .display:
+            bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
+            bottomBorderView.layer.cornerRadius = bottomBorderView.bounds.height / 2
+            bottomBorderView.backgroundColor = borderInactiveColor
+
+            borderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: 0, height: borderWidth)
+            borderView.layer.cornerRadius = borderView.bounds.height / 2
+            borderView.backgroundColor = borderActiveColor
+        }
+    }
     
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
+        if let text = text, !text.isEmpty {
+            placeholderLabel.text = errorValidationHandler(text) ?? placeholder
+        } else {
+            placeholderLabel.text = placeholder
+        }
+        placeholderLabel.font = placeholderFont
+        placeholderLabel.textAlignment = textAlignment
+
+        let size = placeholderLabel.sizeThatFits(bounds.size)
+        placeholderLabel.frame.size.height = size.height
+
         let color: UIColor
         if let text = text, !text.isEmpty {
             color = isValid ? placeholderColor : errorColor
@@ -294,45 +317,42 @@ open class BaseBeautifulTextField: UITextField {
 
     
     // MARK: - Public
-    open func configureTextField(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType, animated: Bool = true) {
+    open func configureTextField(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType, animated: Bool = true, animations: (() -> ())? = nil, completion: ((Bool) -> ())? = nil) {
         self.textFieldStateType = textFieldStateType
         self.textStateType = textStateType
         
-        let animationDuration: TimeInterval = animated ? 0.2 : 0.0
+        func configure() {
+            configureBorder(forTextFieldStateType: textFieldStateType)
+            configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
+        }
         
-        UIView.animate(withDuration: animationDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut], animations: {
-            self.configureBorder(forTextFieldStateType: textFieldStateType)
-            self.configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
-        }, completion: { (finished) in
-            // ...
-        })
+        if animated {
+            UIView.animate(withDuration: animationDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut], animations: {
+                configure()
+                animations?()
+            }, completion: { (finished) in
+                completion?(finished)
+            })
+        } else {
+            configure()
+        }
     }
 }
 
 
 @IBDesignable open class BeautifulTextField: BaseBeautifulTextField {
-    
-//    open override func configureTextField(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType, animated: Bool = true) {
-//        super.configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: animated)
-//        
-//        let animationDuration = animated ? 0.15 : 0.0
-//
-//        UIView.animate(withDuration: animationDuration, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
-//            self.configureTextColor(forTextFieldStateType: textFieldStateType)
-//        }, completion: { (finished) in
-//                // ...
-//        })
-//    }
-//    
-//    
-//    // MARK: - Custom
-//    func configureTextColor(forTextFieldStateType textFieldStateType: TextFieldStateType) {
-//        switch textFieldStateType {
-//        case .display:
-//            textColor = .gray
-//            
-//        case .entry:
-//            textColor = .black
-//        }
-//    }
+
+    open override func configureTextField(forTextFieldStateType textFieldStateType: BaseBeautifulTextField.TextFieldStateType, forTextStateType textStateType: BaseBeautifulTextField.TextStateType, animated: Bool, animations: (() -> ())?, completion: ((Bool) -> ())?) {
+        super.configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: animated, animations: { 
+            switch textFieldStateType {
+            case .display:
+                self.textColor = self.textColor?.withAlphaComponent(0.6)
+                
+            case .entry:
+                self.textColor = self.textColor?.withAlphaComponent(1.0)
+            }
+        }) { (finished) in
+            // ...
+        }
+    }
 }
