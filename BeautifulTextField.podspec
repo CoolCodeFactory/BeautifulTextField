@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BeautifulTextField'
-  s.version          = '0.9.1'
+  s.version          = '0.9.2'
   s.summary          = 'BeautifulTextField is just a Beautiful UITextField with small customization.'
 
 # This description is used to generate tags and improve search results.
