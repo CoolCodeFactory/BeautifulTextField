@@ -12,8 +12,6 @@ import UIKit
 
 open class BaseBeautifulTextField: UITextField {
     
-    private var _bounds: CGRect = .zero
-    
     // MARK: - States
     public enum TextFieldStateType {
         case entry
@@ -33,7 +31,7 @@ open class BaseBeautifulTextField: UITextField {
     open weak private(set) var borderView: UIView!
     open weak private(set) var bottomBorderView: UIView!
 
-    @IBInspectable open var borderInactiveColor: UIColor = .black {
+    @IBInspectable open var borderInactiveColor: UIColor = .lightGray {
         didSet {
             updateBorder()
         }
@@ -45,7 +43,7 @@ open class BaseBeautifulTextField: UITextField {
         }
     }
     
-    @IBInspectable open var borderWidth: CGFloat = 1.0 {
+    @IBInspectable open var borderWidth: CGFloat = 2.0 {
         didSet {
             updateBorder()
         }
@@ -85,6 +83,25 @@ open class BaseBeautifulTextField: UITextField {
         }
     }
     
+    // MARK: - Error handling
+    @IBInspectable open var errorColor: UIColor = .red
+    
+    open var errorValidationHandler: (String) -> (String?) = { _ in
+        return nil
+    }
+    
+    var isValid: Bool {
+        if let text = text, !text.isEmpty {
+            let error = errorValidationHandler(text)
+            if error == nil {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
     
     // MARK: - Init/Deinit
     public override init(frame: CGRect) {
@@ -143,13 +160,9 @@ open class BaseBeautifulTextField: UITextField {
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        if _bounds != bounds {
-            _bounds = bounds
-            
-            updateBorder()
-            updatePlaceholder()
-            configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
-        }
+        updateBorder()
+        updatePlaceholder()
+        configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
     }
     
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -181,6 +194,7 @@ open class BaseBeautifulTextField: UITextField {
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        validate()
     }
     
     @objc private func textFieldTextDidChange() {
@@ -189,6 +203,7 @@ open class BaseBeautifulTextField: UITextField {
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        validate()
     }
     
     @objc private func textFieldDidEndEditing() {
@@ -197,6 +212,7 @@ open class BaseBeautifulTextField: UITextField {
         } else {
             configureTextField(forTextFieldStateType: .display, forTextStateType: .empty)
         }
+        validate()
     }
     
     private func updateBorder() {
@@ -204,14 +220,20 @@ open class BaseBeautifulTextField: UITextField {
     }
     
     private func updatePlaceholder() {
-        placeholderLabel.text = placeholder
-        if let font = font {
-            placeholderLabel.font = font.withSize(font.pointSize * placeholderFontScale)
-        }
-        placeholderLabel.sizeToFit()
+        configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
     }
     
     private func configureBorder(forTextFieldStateType textFieldStateType: TextFieldStateType) {
+        if let text = text, !text.isEmpty {
+            placeholderLabel.text = errorValidationHandler(text) ?? placeholder
+        }
+        if let font = font {
+            placeholderLabel.font = font.withSize(font.pointSize * placeholderFontScale)
+        }
+        
+        let size = placeholderLabel.sizeThatFits(bounds.size)
+        placeholderLabel.frame.size.height = size.height
+
         switch textFieldStateType {
         case .entry:
             bottomBorderView.frame = CGRect(x: 0, y: bounds.maxY - borderWidth, width: bounds.width, height: borderWidth)
@@ -229,22 +251,44 @@ open class BaseBeautifulTextField: UITextField {
         }
     }
     
+    private func validate() {
+        if isFirstResponder, let text = text, !text.isEmpty {
+            if let error = errorValidationHandler(text) {
+                placeholderLabel.text = error
+                placeholderLabel.textColor = errorColor
+            } else {
+                placeholderLabel.text = placeholder
+                placeholderLabel.textColor = placeholderColor
+            }
+        } else {
+            placeholderLabel.text = placeholder
+            placeholderLabel.textColor = placeholderColor
+        }
+    }
+    
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
+        let color: UIColor
+        if let text = text, !text.isEmpty {
+            color = isValid ? placeholderColor : errorColor
+        } else {
+            color = placeholderColor
+        }
+        
         if textFieldStateType == .entry && textStateType == .empty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = placeholderColor
+            placeholderLabel.textColor = color
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = placeholderColor
+            placeholderLabel.textColor = color
         } else if textFieldStateType == .display && textStateType == .empty {
             let textRectHeight = bounds.height - (placeholderLabel.bounds.height + 5)
             let offsetY = placeholderLabel.bounds.height + 5 + (textRectHeight / 2 - placeholderLabel.bounds.height / 2)
             let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.bounds.height)
             placeholderLabel.frame = rect
-            placeholderLabel.textColor = placeholderColor
+            placeholderLabel.textColor = color
         } else if textFieldStateType == .display && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = placeholderColor.withAlphaComponent(0.6)
+            placeholderLabel.textColor = color.withAlphaComponent(0.6)
         }
     }
 

@@ -19,7 +19,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yA2-Qm-N9h">
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Default" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KmO-z0-bM3" customClass="BeautifulTextField" customModule="BeautifulTextField">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KmO-z0-bM3" customClass="BeautifulTextField" customModule="BeautifulTextField">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="N1q-5g-Yic"/>
                                         </constraints>
@@ -95,6 +95,9 @@
                             <constraint firstItem="yA2-Qm-N9h" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="xHJ-sq-Vur"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="emailTextField" destination="KmO-z0-bM3" id="6sX-K8-eyd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
