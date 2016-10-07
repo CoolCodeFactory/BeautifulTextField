@@ -1,15 +1,14 @@
 # BeautifulTextField
 
-[![CI Status](http://img.shields.io/travis/Dmitry Utmanov/BeautifulTextField.svg?style=flat)](https://travis-ci.org/Dmitry Utmanov/BeautifulTextField)
 [![Version](https://img.shields.io/cocoapods/v/BeautifulTextField.svg?style=flat)](http://cocoapods.org/pods/BeautifulTextField)
 [![License](https://img.shields.io/cocoapods/l/BeautifulTextField.svg?style=flat)](http://cocoapods.org/pods/BeautifulTextField)
 [![Platform](https://img.shields.io/cocoapods/p/BeautifulTextField.svg?style=flat)](http://cocoapods.org/pods/BeautifulTextField)
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+![Example Gif](https://raw.githubusercontent.com/CoolCodeFactory/BeautifulTextField/master/example.gif)]
 
-## Requirements
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Installation
 
