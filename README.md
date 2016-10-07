@@ -6,7 +6,7 @@
 
 ## Example
 
-![Example Gif](https://raw.githubusercontent.com/CoolCodeFactory/BeautifulTextField/master/example.gif)]
+![Example Gif](https://raw.githubusercontent.com/CoolCodeFactory/BeautifulTextField/master/example.gif)
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
