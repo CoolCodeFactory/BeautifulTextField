@@ -9,16 +9,10 @@
 Pod::Spec.new do |s|
   s.name             = 'BeautifulTextField'
   s.version          = '0.9.2'
-  s.summary          = 'BeautifulTextField is just a Beautiful UITextField with small customization.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
+  s.summary          = 'BeautifulTextField is just a beautiful UITextField.'
 
   s.description      = <<-DESC
-BeautifulTextField is just a UITextField with small customization. You can custumize it how you want!
+BeautifulTextField is just a beautiful UITextField. Easy to customize! Easy to use! Try it now!
                        DESC
 
   s.homepage         = 'https://github.com/CoolCodeFactory/BeautifulTextField.git'
