@@ -9,6 +9,18 @@
 BeautifulTextField is just a beautiful UITextField. Easy to customize! Easy to use! Try it now!
 
 
+## Example
+
+![Example Gif](https://raw.githubusercontent.com/CoolCodeFactory/BeautifulTextField/master/example.gif)
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
+
+
+## Requirements
+
+Inside Interface Builder (storyboard / XIB) set borderStyle to None and setup custom height of textField ~ 40pt~50pt (depends on fontSize and placeholderFontScale)
+
+
 ## Customize
 
 Use default property to setup textField
@@ -56,17 +68,6 @@ open override func configureTextField(forTextFieldStateType textFieldStateType: 
     }
 }
 
-
-## Requirements
-
-Inside Interface Builder (storyboard / XIB) set borderStyle to None and setup custom height of textField ~ 40pt~50pt (depends on fontSize and placeholderFontScale)
-
-
-## Example
-
-![Example Gif](https://raw.githubusercontent.com/CoolCodeFactory/BeautifulTextField/master/example.gif)
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Installation
 
