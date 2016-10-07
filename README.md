@@ -24,7 +24,7 @@ Inside Interface Builder (storyboard / XIB) set borderStyle to None and setup cu
 ## Customize
 
 Use default property to setup textField
-```
+```swift
 // Border
 var borderInactiveColor: UIColor = .lightGray
 var borderActiveColor: UIColor = .red
