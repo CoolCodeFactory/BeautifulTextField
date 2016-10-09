@@ -72,7 +72,7 @@ open override func configureTextField(forTextFieldStateType textFieldStateType: 
         // ...
     }
 }
-
+```
 
 ## Installation
 
