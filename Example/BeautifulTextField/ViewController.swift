@@ -11,22 +11,25 @@ import BeautifulTextField
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var emailTextField: BeautifulTextField!
+    @IBOutlet weak var newPasswordTF: BeautifulTextField!
+    @IBOutlet weak var newPasswordAgainTF: BeautifulTextField!
+    @IBOutlet weak var oldPasswordTF: BeautifulTextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib
         
-        
-        emailTextField.errorValidationHandler = { text in
-            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        newPasswordTF.errorValidationHandler = { [weak self] text in
+            guard let strongSelf = self else { return "newPasswordTF.placeholder" }
+            let passwordRegEx = "^[A-Za-z0-9\\.\\@\\-\\_\\,]{6,20}$"
             
-            let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-            let match = emailTest.evaluate(with: text)
+            let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+            let match = passwordTest.evaluate(with: text)
             if match {
+                strongSelf.newPasswordTF.borderActiveColor = UIColor.black
                 return nil
             } else {
-                return "Invalid email"
+                strongSelf.newPasswordTF.borderActiveColor = UIColor.red
+                return strongSelf.newPasswordTF.placeholder
             }
         }
     }
