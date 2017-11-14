@@ -72,6 +72,9 @@
                                 <state key="normal" title="Save">
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="saveTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="zsS-Pp-h8I"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Пупа должна быть от 6 до 20 символовкек лел" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPM-SW-d26">
                                 <rect key="frame" x="15" y="143" width="345" height="14.5"/>
@@ -80,7 +83,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ogB-6H-hZf" firstAttribute="leading" secondItem="Ga3-Ty-bhZ" secondAttribute="leading" id="68g-40-tnD"/>
                             <constraint firstItem="FA6-3c-YAz" firstAttribute="leading" secondItem="Ga3-Ty-bhZ" secondAttribute="leading" id="FGa-Gd-lPv"/>
@@ -101,6 +104,7 @@
                         <viewLayoutGuide key="safeArea" id="Ga3-Ty-bhZ"/>
                     </view>
                     <connections>
+                        <outlet property="descriptionLabel" destination="pPM-SW-d26" id="GC4-7v-uy3"/>
                         <outlet property="newPasswordAgainTF" destination="J6z-Tv-he7" id="dpo-wD-y2q"/>
                         <outlet property="newPasswordTF" destination="aOZ-cp-jj4" id="EtJ-AR-ME8"/>
                         <outlet property="oldPasswordTF" destination="FA6-3c-YAz" id="gF6-IA-Tj7"/>

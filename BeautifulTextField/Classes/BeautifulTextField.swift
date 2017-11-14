@@ -23,6 +23,12 @@ import UIKit
         case notEmpty
     }
     
+    public enum PlaceholderAlignmentType {
+        case top
+        case center
+        case bottom
+    }
+    
     open private(set) var textFieldStateType: TextFieldStateType = .display
     open private(set) var textStateType: TextStateType = .empty
 
@@ -68,7 +74,13 @@ import UIKit
         return nil
     }
     
-    @IBInspectable open var placeholderColor: UIColor = .black {
+    @IBInspectable open var placeholderColor: UIColor = .darkGray {
+        didSet {
+            updatePlaceholder()
+        }
+    }
+    
+    open var placeholderAlignment: PlaceholderAlignmentType = .center {
         didSet {
             updatePlaceholder()
         }
@@ -93,14 +105,20 @@ import UIKit
         }
     }
     
-    // MARK: - Error handling
-    open var errorColor: UIColor = .red
+    open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) {
+        didSet {
+            layoutSubviews()
+        }
+    }
     
+    // MARK: - Error handling
+    open var validateOnEdit = true
+    open var errorColor: UIColor = .red
     open var errorValidationHandler: (String) -> (String?) = { _ in
         return nil
     }
     
-    var isValid: Bool {
+    open var isValid: Bool {
         if let text = text, !text.isEmpty {
             let error = errorValidationHandler(text)
             if error == nil {
@@ -164,9 +182,9 @@ import UIKit
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        updateBorder()
-        updatePlaceholder()
-        configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
+        if borderView.bounds.width != bounds.width {
+            configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
+        }
     }
     
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -178,7 +196,8 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
     }
     
     open override func editingRect(forBounds bounds: CGRect) -> CGRect {
@@ -190,7 +209,9 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
+        
     }
     
     open override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
@@ -202,7 +223,8 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
     }
     
     // MARK: - Private
@@ -212,6 +234,7 @@ import UIKit
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        guard validateOnEdit else { return }
         validate()
     }
     
@@ -221,6 +244,7 @@ import UIKit
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        guard validateOnEdit else { return }
         validate()
     }
     
@@ -234,7 +258,7 @@ import UIKit
     }
     
     private func validate() {
-        if isFirstResponder, let text = text, !text.isEmpty {
+        if let text = text, !text.isEmpty {
             if let error = errorValidationHandler(text) {
                 placeholderLabel.text = error
                 placeholderLabel.textColor = errorColor
@@ -279,7 +303,7 @@ import UIKit
     }
     
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
-        if let text = text, !text.isEmpty {
+        if let text = text, !text.isEmpty, validateOnEdit {
             placeholderLabel.text = errorValidationHandler(text) ?? placeholder
         } else {
             placeholderLabel.text = placeholder
@@ -290,29 +314,31 @@ import UIKit
         let size = placeholderLabel.sizeThatFits(bounds.size)
         placeholderLabel.frame.size.height = size.height
 
-        let color: UIColor
-        if let text = text, !text.isEmpty {
-            color = isValid ? placeholderColor : errorColor
-        } else {
-            color = placeholderColor
-        }
-        
         if textFieldStateType == .entry && textStateType == .empty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color
         } else if textFieldStateType == .display && textStateType == .empty {
             let textRectHeight = bounds.height - (placeholderLabel.bounds.height + 5)
-            let offsetY = placeholderLabel.bounds.height + 5 + (textRectHeight / 2 - placeholderLabel.bounds.height / 2)
+            
+            let offsetY: CGFloat
+            switch placeholderAlignment {
+            case .top:
+                offsetY = 5.0
+
+            case .center:
+                offsetY = placeholderLabel.bounds.height + textRectHeight / 2 - placeholderLabel.bounds.height + 5.0
+
+            case .bottom:
+                offsetY = placeholderLabel.bounds.height + (textRectHeight - placeholderLabel.bounds.height) / 2 + 5.0
+            }
+            
             let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.bounds.height)
             placeholderLabel.frame = rect
-            placeholderLabel.textColor = color
         } else if textFieldStateType == .display && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color.withAlphaComponent(0.6)
         }
+        placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
     }
 
     
