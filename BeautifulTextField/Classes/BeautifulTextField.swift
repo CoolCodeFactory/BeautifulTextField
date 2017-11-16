@@ -39,19 +39,19 @@ import UIKit
     open weak private(set) var borderView: UIView!
     open weak private(set) var bottomBorderView: UIView!
 
-    @IBInspectable open var borderInactiveColor: UIColor = .lightGray {
+    @IBInspectable public var borderInactiveColor: UIColor = .lightGray {
         didSet {
             updateBorder()
         }
     }
     
-    @IBInspectable open var borderActiveColor: UIColor = .red {
+    @IBInspectable public var borderActiveColor: UIColor = .red {
         didSet {
             updateBorder()
         }
     }
     
-    @IBInspectable open var borderWidth: CGFloat = 2.0 {
+    @IBInspectable public var borderWidth: CGFloat = 2.0 {
         didSet {
             updateBorder()
         }
@@ -61,7 +61,7 @@ import UIKit
     // MARK: - Placeholder
     open weak private(set) var placeholderLabel: UILabel!
     
-    @IBInspectable open var placeholderFontScale: CGFloat = 0.7 {
+    @IBInspectable public var placeholderFontScale: CGFloat = 0.7 {
         didSet {
             updatePlaceholder()
         }
@@ -74,13 +74,13 @@ import UIKit
         return nil
     }
     
-    @IBInspectable open var placeholderColor: UIColor = .darkGray {
+    @IBInspectable public var placeholderColor: UIColor = .darkGray {
         didSet {
             updatePlaceholder()
         }
     }
     
-    open var placeholderAlignment: PlaceholderAlignmentType = .center {
+    public var placeholderAlignment: PlaceholderAlignmentType = .center {
         didSet {
             updatePlaceholder()
         }
@@ -105,14 +105,14 @@ import UIKit
         }
     }
     
-    open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) {
+    public var textInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) {
         didSet {
             layoutSubviews()
         }
     }
     
     // MARK: - Error handling
-    open var validateOnEdit = true
+    open var isLiveValidation = true
     open var errorColor: UIColor = .red
     open var errorValidationHandler: (String) -> (String?) = { _ in
         return nil
@@ -179,6 +179,7 @@ import UIKit
     
     
     // MARK: - Overrides
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -227,14 +228,16 @@ import UIKit
         return rectWithInsets
     }
     
+    
     // MARK: - Private
+    
     @objc private func textFieldDidBeginEditing() {
         if hasText {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .notEmpty)
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
-        guard validateOnEdit else { return }
+        guard isLiveValidation else { return }
         validate()
     }
     
@@ -244,7 +247,7 @@ import UIKit
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
-        guard validateOnEdit else { return }
+        guard isLiveValidation else { return }
         validate()
     }
     
@@ -303,7 +306,7 @@ import UIKit
     }
     
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
-        if let text = text, !text.isEmpty, validateOnEdit {
+        if let text = text, !text.isEmpty, isLiveValidation {
             placeholderLabel.text = errorValidationHandler(text) ?? placeholder
         } else {
             placeholderLabel.text = placeholder
@@ -366,7 +369,7 @@ import UIKit
 }
 
 
-@IBDesignable open class BeautifulTextField: BaseBeautifulTextField {
+@IBDesignable open class CCFBeautifulTextField: BaseBeautifulTextField {
 
     open override func configureTextField(forTextFieldStateType textFieldStateType: BaseBeautifulTextField.TextFieldStateType, forTextStateType textStateType: BaseBeautifulTextField.TextStateType, animated: Bool, animations: (() -> ())?, completion: ((Bool) -> ())?) {
         super.configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: animated, animations: { 
