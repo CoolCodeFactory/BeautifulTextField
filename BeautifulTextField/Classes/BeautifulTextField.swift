@@ -76,6 +76,7 @@ import UIKit
     
     @IBInspectable public var placeholderColor: UIColor = .darkGray {
         didSet {
+            placeholderLabel.textColor = placeholderColor
             updatePlaceholder()
         }
     }
@@ -321,6 +322,9 @@ import UIKit
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
+            if !isLiveValidation {
+                placeholderLabel.textColor = placeholderColor
+            }
         } else if textFieldStateType == .display && textStateType == .empty {
             let textRectHeight = bounds.height - (placeholderLabel.bounds.height + 5)
             
@@ -369,13 +373,13 @@ import UIKit
 }
 
 
-@IBDesignable open class CCFBeautifulTextField: BaseBeautifulTextField {
+@IBDesignable open class BeautifulTextField: BaseBeautifulTextField {
 
     open override func configureTextField(forTextFieldStateType textFieldStateType: BaseBeautifulTextField.TextFieldStateType, forTextStateType textStateType: BaseBeautifulTextField.TextStateType, animated: Bool, animations: (() -> ())?, completion: ((Bool) -> ())?) {
         super.configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: animated, animations: { 
             switch textFieldStateType {
             case .display:
-                self.textColor = self.textColor?.withAlphaComponent(0.6)
+                self.textColor = self.textColor?.withAlphaComponent(0.9)
                 
             case .entry:
                 self.textColor = self.textColor?.withAlphaComponent(1.0)
