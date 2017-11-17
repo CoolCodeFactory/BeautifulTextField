@@ -9,15 +9,4 @@ target 'BeautifulTextField_Example' do
   
   pod 'BeautifulTextField', :path => '../'
   
-  target 'BeautifulTextField_Tests' do
-    
-    inherit! :search_paths
-    
-    pod 'Quick'
-    pod 'Nimble'
-    # pod 'FBSnapshotTestCase'
-    # pod 'Nimble-Snapshots'
-    
-  end
-  
 end

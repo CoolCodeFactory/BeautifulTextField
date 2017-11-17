@@ -23,6 +23,12 @@ import UIKit
         case notEmpty
     }
     
+    public enum PlaceholderAlignmentType {
+        case top
+        case center
+        case bottom
+    }
+    
     open private(set) var textFieldStateType: TextFieldStateType = .display
     open private(set) var textStateType: TextStateType = .empty
 
@@ -33,19 +39,19 @@ import UIKit
     open weak private(set) var borderView: UIView!
     open weak private(set) var bottomBorderView: UIView!
 
-    @IBInspectable open var borderInactiveColor: UIColor = .lightGray {
+    @IBInspectable public var borderInactiveColor: UIColor = .lightGray {
         didSet {
             updateBorder()
         }
     }
     
-    @IBInspectable open var borderActiveColor: UIColor = .red {
+    @IBInspectable public var borderActiveColor: UIColor = .red {
         didSet {
             updateBorder()
         }
     }
     
-    @IBInspectable open var borderWidth: CGFloat = 2.0 {
+    @IBInspectable public var borderWidth: CGFloat = 2.0 {
         didSet {
             updateBorder()
         }
@@ -55,7 +61,7 @@ import UIKit
     // MARK: - Placeholder
     open weak private(set) var placeholderLabel: UILabel!
     
-    @IBInspectable open var placeholderFontScale: CGFloat = 0.7 {
+    @IBInspectable public var placeholderFontScale: CGFloat = 0.7 {
         didSet {
             updatePlaceholder()
         }
@@ -68,7 +74,14 @@ import UIKit
         return nil
     }
     
-    @IBInspectable open var placeholderColor: UIColor = .black {
+    @IBInspectable public var placeholderColor: UIColor = .darkGray {
+        didSet {
+            placeholderLabel.textColor = placeholderColor
+            updatePlaceholder()
+        }
+    }
+    
+    public var placeholderAlignment: PlaceholderAlignmentType = .center {
         didSet {
             updatePlaceholder()
         }
@@ -93,14 +106,20 @@ import UIKit
         }
     }
     
-    // MARK: - Error handling
-    open var errorColor: UIColor = .red
+    public var textInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) {
+        didSet {
+            layoutSubviews()
+        }
+    }
     
+    // MARK: - Error handling
+    open var isLiveValidation = true
+    open var errorColor: UIColor = .red
     open var errorValidationHandler: (String) -> (String?) = { _ in
         return nil
     }
     
-    var isValid: Bool {
+    open var isValid: Bool {
         if let text = text, !text.isEmpty {
             let error = errorValidationHandler(text)
             if error == nil {
@@ -161,12 +180,13 @@ import UIKit
     
     
     // MARK: - Overrides
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        updateBorder()
-        updatePlaceholder()
-        configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
+        if borderView.bounds.width != bounds.width {
+            configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
+        }
     }
     
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -178,7 +198,8 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
     }
     
     open override func editingRect(forBounds bounds: CGRect) -> CGRect {
@@ -190,7 +211,9 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
+        
     }
     
     open override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
@@ -202,16 +225,20 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
-        return finalRect
+        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        return rectWithInsets
     }
     
+    
     // MARK: - Private
+    
     @objc private func textFieldDidBeginEditing() {
         if hasText {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .notEmpty)
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        guard isLiveValidation else { return }
         validate()
     }
     
@@ -221,6 +248,7 @@ import UIKit
         } else {
             configureTextField(forTextFieldStateType: .entry, forTextStateType: .empty)
         }
+        guard isLiveValidation else { return }
         validate()
     }
     
@@ -234,7 +262,7 @@ import UIKit
     }
     
     private func validate() {
-        if isFirstResponder, let text = text, !text.isEmpty {
+        if let text = text, !text.isEmpty {
             if let error = errorValidationHandler(text) {
                 placeholderLabel.text = error
                 placeholderLabel.textColor = errorColor
@@ -279,7 +307,7 @@ import UIKit
     }
     
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
-        if let text = text, !text.isEmpty {
+        if let text = text, !text.isEmpty, isLiveValidation {
             placeholderLabel.text = errorValidationHandler(text) ?? placeholder
         } else {
             placeholderLabel.text = placeholder
@@ -290,29 +318,34 @@ import UIKit
         let size = placeholderLabel.sizeThatFits(bounds.size)
         placeholderLabel.frame.size.height = size.height
 
-        let color: UIColor
-        if let text = text, !text.isEmpty {
-            color = isValid ? placeholderColor : errorColor
-        } else {
-            color = placeholderColor
-        }
-        
         if textFieldStateType == .entry && textStateType == .empty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color
+            if !isLiveValidation {
+                placeholderLabel.textColor = placeholderColor
+            }
         } else if textFieldStateType == .display && textStateType == .empty {
             let textRectHeight = bounds.height - (placeholderLabel.bounds.height + 5)
-            let offsetY = placeholderLabel.bounds.height + 5 + (textRectHeight / 2 - placeholderLabel.bounds.height / 2)
+            
+            let offsetY: CGFloat
+            switch placeholderAlignment {
+            case .top:
+                offsetY = 5.0
+
+            case .center:
+                offsetY = placeholderLabel.bounds.height + textRectHeight / 2 - placeholderLabel.bounds.height + 5.0
+
+            case .bottom:
+                offsetY = placeholderLabel.bounds.height + (textRectHeight - placeholderLabel.bounds.height) / 2 + 5.0
+            }
+            
             let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.bounds.height)
             placeholderLabel.frame = rect
-            placeholderLabel.textColor = color
         } else if textFieldStateType == .display && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
-            placeholderLabel.textColor = color.withAlphaComponent(0.6)
         }
+        placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
     }
 
     
@@ -346,7 +379,7 @@ import UIKit
         super.configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: animated, animations: { 
             switch textFieldStateType {
             case .display:
-                self.textColor = self.textColor?.withAlphaComponent(0.6)
+                self.textColor = self.textColor?.withAlphaComponent(0.9)
                 
             case .entry:
                 self.textColor = self.textColor?.withAlphaComponent(1.0)

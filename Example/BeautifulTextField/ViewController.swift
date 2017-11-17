@@ -5,12 +5,11 @@
 //  Created by Dmitry Utmanov on 10/06/2016.
 //  Copyright (c) 2016 Dmitry Utmanov. All rights reserved.
 //
-
 import UIKit
 import BeautifulTextField
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var emailTextField: BeautifulTextField!
     
     override func viewDidLoad() {
@@ -31,4 +30,3 @@ class ViewController: UIViewController {
         }
     }
 }
-
