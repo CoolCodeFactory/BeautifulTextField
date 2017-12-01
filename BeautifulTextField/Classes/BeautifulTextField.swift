@@ -36,7 +36,7 @@ import UIKit
     @IBInspectable var animationDuration: TimeInterval = 0.2
     
     // MARK: - Border
-    open weak private(set) var borderView: UIView!
+    open weak private(set) var topBorderView: UIView!
     open weak private(set) var bottomBorderView: UIView!
 
     @IBInspectable public var borderInactiveColor: UIColor = .lightGray {
@@ -52,6 +52,12 @@ import UIKit
     }
     
     @IBInspectable public var borderWidth: CGFloat = 2.0 {
+        didSet {
+            updateBorder()
+        }
+    }
+    
+    @IBInspectable public var isTopBorderAvailable: Bool = false {
         didSet {
             updateBorder()
         }
@@ -148,13 +154,15 @@ import UIKit
         self.addTarget(self, action: #selector(textFieldDidEndEditing), for: UIControlEvents.editingDidEnd)
         self.addTarget(self, action: #selector(textFieldTextDidChange), for: UIControlEvents.editingChanged)
         
-        let _bottomBorderView = UIView(frame: .zero)
+        let _topBorderView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth))
+        _topBorderView.layer.cornerRadius = _topBorderView.bounds.height / 2
+        addSubview(_topBorderView)
+        topBorderView = _topBorderView
+        
+        let _bottomBorderView = UIView(frame: CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth))
+        _bottomBorderView.layer.cornerRadius = _bottomBorderView.bounds.height / 2
         addSubview(_bottomBorderView)
         bottomBorderView = _bottomBorderView
-        
-        let _borderView = UIView(frame: .zero)
-        addSubview(_borderView)
-        borderView = _borderView
         
         let _placeholderLabel = UILabel(frame: .zero)
         addSubview(_placeholderLabel)
@@ -180,14 +188,6 @@ import UIKit
     
     
     // MARK: - Overrides
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        if borderView.bounds.width != bounds.width {
-            configureTextField(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType, animated: false)
-        }
-    }
     
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
@@ -277,32 +277,26 @@ import UIKit
     }
 
     private func updateBorder() {
-        configureBorder(forTextFieldStateType: textFieldStateType)
+        updateBorderState(forTextFieldStateType: textFieldStateType)
     }
     
     private func updatePlaceholder() {
         configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
     }
     
-    private func configureBorder(forTextFieldStateType textFieldStateType: TextFieldStateType) {
+    private func updateBorderState(forTextFieldStateType textFieldStateType: TextFieldStateType) {
+        topBorderView.frame.size.height = borderWidth
+        bottomBorderView.frame.size.height = borderWidth
+        topBorderView.isHidden = !isTopBorderAvailable
+        
         switch textFieldStateType {
         case .entry:
-            bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
-            bottomBorderView.layer.cornerRadius = bottomBorderView.bounds.height / 2
-            bottomBorderView.backgroundColor = borderInactiveColor
-            
-            borderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
-            borderView.layer.cornerRadius = borderView.bounds.height / 2
-            borderView.backgroundColor = borderActiveColor
+            topBorderView.backgroundColor = borderActiveColor
+            bottomBorderView.backgroundColor = borderActiveColor
             
         case .display:
-            bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
-            bottomBorderView.layer.cornerRadius = bottomBorderView.bounds.height / 2
+            topBorderView.backgroundColor = borderInactiveColor
             bottomBorderView.backgroundColor = borderInactiveColor
-
-            borderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: 0, height: borderWidth)
-            borderView.layer.cornerRadius = borderView.bounds.height / 2
-            borderView.backgroundColor = borderActiveColor
         }
     }
     
@@ -355,7 +349,7 @@ import UIKit
         self.textStateType = textStateType
         
         func configure() {
-            configureBorder(forTextFieldStateType: textFieldStateType)
+            updateBorderState(forTextFieldStateType: textFieldStateType)
             configurePlaceholder(forTextFieldStateType: textFieldStateType, forTextStateType: textStateType)
         }
         
