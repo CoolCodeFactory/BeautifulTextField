@@ -285,8 +285,8 @@ import UIKit
     }
     
     private func updateBorderState(forTextFieldStateType textFieldStateType: TextFieldStateType) {
-        topBorderView.frame.size.height = borderWidth
-        bottomBorderView.frame.size.height = borderWidth
+        topBorderView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth)
+        bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
         topBorderView.isHidden = !isTopBorderAvailable
         
         switch textFieldStateType {
