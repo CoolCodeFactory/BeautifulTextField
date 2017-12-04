@@ -45,7 +45,7 @@ import UIKit
         }
     }
     
-    @IBInspectable public var borderActiveColor: UIColor = .red {
+    @IBInspectable public var borderActiveColor: UIColor = .cyan {
         didSet {
             updateBorder()
         }
@@ -266,6 +266,7 @@ import UIKit
             if let error = errorValidationHandler(text) {
                 placeholderLabel.text = error
                 placeholderLabel.textColor = errorColor
+                bottomBorderView.backgroundColor = errorColor
             } else {
                 placeholderLabel.text = placeholder
                 placeholderLabel.textColor = placeholderColor
