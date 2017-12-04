@@ -65,6 +65,12 @@ import UIKit
     
     
     // MARK: - Placeholder
+    open var placeholderOffset: CGPoint = CGPoint(x: 0, y: 5) {
+        didSet {
+            updatePlaceholder()
+        }
+    }
+    
     open weak private(set) var placeholderLabel: UILabel!
     
     @IBInspectable public var placeholderFontScale: CGFloat = 0.7 {
@@ -314,9 +320,9 @@ import UIKit
         placeholderLabel.frame.size.height = size.height
 
         if textFieldStateType == .entry && textStateType == .empty {
-            placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
-            placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
             if !isLiveValidation {
                 placeholderLabel.textColor = placeholderColor
             }
@@ -326,19 +332,19 @@ import UIKit
             let offsetY: CGFloat
             switch placeholderAlignment {
             case .top:
-                offsetY = 5.0
+                offsetY = placeholderOffset.y
 
             case .center:
-                offsetY = placeholderLabel.bounds.height + textRectHeight / 2 - placeholderLabel.bounds.height + 5.0
+                offsetY = placeholderLabel.bounds.height + textRectHeight / 2 - placeholderLabel.bounds.height + placeholderOffset.y
 
             case .bottom:
-                offsetY = placeholderLabel.bounds.height + (textRectHeight - placeholderLabel.bounds.height) / 2 + 5.0
+                offsetY = placeholderLabel.bounds.height + (textRectHeight - placeholderLabel.bounds.height) / 2 + placeholderOffset.y
             }
             
             let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.bounds.height)
             placeholderLabel.frame = rect
         } else if textFieldStateType == .display && textStateType == .notEmpty {
-            placeholderLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
         }
         placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
     }
