@@ -126,6 +126,14 @@ import UIKit
     
     // MARK: - Error handling
     open var isLiveValidation = true
+    
+    public enum ErrorMarkType {
+        case placeholder
+        case border
+    }
+    
+    open var errorMarkType: [ErrorMarkType] = [.placeholder, .border]
+    
     open var errorColor: UIColor = .red
     open var errorValidationHandler: (String) -> (String?) = { _ in
         return nil
@@ -271,8 +279,12 @@ import UIKit
         if let text = text, !text.isEmpty {
             if let error = errorValidationHandler(text) {
                 placeholderLabel.text = error
-                placeholderLabel.textColor = errorColor
-                bottomBorderView.backgroundColor = errorColor
+                if errorMarkType.contains(where: { $0 == .placeholder }) {
+                    placeholderLabel.textColor = errorColor
+                }
+                if errorMarkType.contains(where: { $0 == .border }) {
+                    bottomBorderView.backgroundColor = errorColor
+                }
             } else {
                 placeholderLabel.text = placeholder
                 placeholderLabel.textColor = placeholderColor
