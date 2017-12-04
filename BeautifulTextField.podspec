@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BeautifulTextField'
-  s.version          = '0.9.5'
+  s.version          = '0.9.6'
   s.summary          = 'BeautifulTextField is just a beautiful UITextField.'
 
   s.description      = <<-DESC
