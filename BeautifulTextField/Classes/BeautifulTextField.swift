@@ -63,6 +63,7 @@ import UIKit
         }
     }
     
+    open var rightViewOffset = CGPoint(x: 0, y: 0)
     
     // MARK: - Placeholder
     open var placeholderOffset: CGPoint = CGPoint(x: 0, y: 5) {
@@ -241,6 +242,13 @@ import UIKit
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
         let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
         return rectWithInsets
+    }
+    
+    open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        var textRect = super.rightViewRect(forBounds: bounds)
+        textRect.origin.x -= rightViewOffset.x
+        textRect.origin.y -= rightViewOffset.y
+        return textRect
     }
     
     
