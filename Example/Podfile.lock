@@ -1,5 +1,5 @@
 PODS:
-  - BeautifulTextField (0.9.4)
+  - BeautifulTextField (0.9.8)
 
 DEPENDENCIES:
   - BeautifulTextField (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BeautifulTextField: a9faf6f8ff142380d5b15887e9f7a5a33b917dd4
+  BeautifulTextField: 2eb362e7dba71ed92f206da46c1a0abf7ad8d967
 
 PODFILE CHECKSUM: e5da792587ec69d79ec35c230d41427bef904765
 

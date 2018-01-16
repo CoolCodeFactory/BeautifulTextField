@@ -38,7 +38,9 @@ import UIKit
     // MARK: - Border
     open weak private(set) var topBorderView: UIView!
     open weak private(set) var bottomBorderView: UIView!
-
+    private var topBorderViewHeightConstraint: NSLayoutConstraint?
+    private var bottomBorderViewHeightConstraint: NSLayoutConstraint?
+    
     @IBInspectable public var borderInactiveColor: UIColor = .lightGray {
         didSet {
             updateBorder()
@@ -167,14 +169,16 @@ import UIKit
         self.addTarget(self, action: #selector(textFieldDidEndEditing), for: UIControlEvents.editingDidEnd)
         self.addTarget(self, action: #selector(textFieldTextDidChange), for: UIControlEvents.editingChanged)
         
-        let _topBorderView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth))
+        let _topBorderView = UIView(frame: .zero)
         _topBorderView.layer.cornerRadius = _topBorderView.bounds.height / 2
         addSubview(_topBorderView)
+        addConstraint(forTopBorderView: _topBorderView)
         topBorderView = _topBorderView
         
-        let _bottomBorderView = UIView(frame: CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth))
+        let _bottomBorderView = UIView(frame: .zero)
         _bottomBorderView.layer.cornerRadius = _bottomBorderView.bounds.height / 2
         addSubview(_bottomBorderView)
+        addConstraint(forBottomBorderView: _bottomBorderView)
         bottomBorderView = _bottomBorderView
         
         let _placeholderLabel = UILabel(frame: .zero)
@@ -310,8 +314,8 @@ import UIKit
     }
     
     private func updateBorderState(forTextFieldStateType textFieldStateType: TextFieldStateType) {
-        topBorderView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth)
-        bottomBorderView.frame = CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth)
+        topBorderViewHeightConstraint?.constant = borderWidth
+        bottomBorderViewHeightConstraint?.constant = borderWidth
         topBorderView.isHidden = !isTopBorderAvailable
         
         switch textFieldStateType {
@@ -374,6 +378,38 @@ import UIKit
         placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
     }
 
+    private func addConstraint(forTopBorderView borderView: UIView) {
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let leading = NSLayoutConstraint(item: borderView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        let trailing = NSLayoutConstraint(item: borderView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let top = NSLayoutConstraint(item: borderView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        addConstraints([leading, trailing, top])
+        
+        let height = NSLayoutConstraint(item: borderView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: borderWidth)
+        
+        topBorderViewHeightConstraint = height
+        
+        borderView.addConstraint(height)
+    }
+    
+    private func addConstraint(forBottomBorderView borderView: UIView) {
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let leading = NSLayoutConstraint(item: borderView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        let trailing = NSLayoutConstraint(item: borderView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let bottom = NSLayoutConstraint(item: borderView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        addConstraints([leading, trailing, bottom])
+        
+        let height = NSLayoutConstraint(item: borderView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: borderWidth)
+        
+        bottomBorderViewHeightConstraint = height
+        
+        borderView.addConstraint(height)
+    }
+    
     
     // MARK: - Public
     open func configureTextField(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType, animated: Bool = true, animations: (() -> ())? = nil, completion: ((Bool) -> ())? = nil) {
