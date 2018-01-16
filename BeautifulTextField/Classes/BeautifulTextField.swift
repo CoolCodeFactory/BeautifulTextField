@@ -63,6 +63,8 @@ import UIKit
         }
     }
     
+    open var rightViewOffset = CGPoint(x: 0, y: 0)
+    open var placeholderEntryOffset = CGPoint(x: 0, y: 0)
     
     // MARK: - Placeholder
     open var placeholderOffset: CGPoint = CGPoint(x: 0, y: 5) {
@@ -80,10 +82,7 @@ import UIKit
     }
     
     private var placeholderFont: UIFont? {
-        if let font = font {
-            return font.withSize(font.pointSize * placeholderFontScale)
-        }
-        return nil
+        return font
     }
     
     @IBInspectable public var placeholderColor: UIColor = .darkGray {
@@ -207,7 +206,7 @@ import UIKit
         let rect = super.textRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight + 5
+            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
         } else {
             offsetY = 0
         }
@@ -220,7 +219,7 @@ import UIKit
         let rect = super.editingRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight + 5
+            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
         } else {
             offsetY = 0
         }
@@ -234,13 +233,20 @@ import UIKit
         let rect = super.clearButtonRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight + 5
+            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
         } else {
             offsetY = 0
         }
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
         let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
         return rectWithInsets
+    }
+    
+    open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        var textRect = super.rightViewRect(forBounds: bounds)
+        textRect.origin.x -= rightViewOffset.x
+        textRect.origin.y -= rightViewOffset.y
+        return textRect
     }
     
     
@@ -320,26 +326,33 @@ import UIKit
     }
     
     private func configurePlaceholder(forTextFieldStateType textFieldStateType: TextFieldStateType, forTextStateType textStateType: TextStateType) {
+        placeholderLabel.layer.anchorPoint = CGPoint(x: 0, y: 0.5)
+        if textFieldStateType == .display && textStateType == .empty {
+            placeholderLabel.transform = CGAffineTransform.identity
+        } else {
+            placeholderLabel.transform = CGAffineTransform(scaleX: placeholderFontScale, y: placeholderFontScale)
+        }
+        
         if let text = text, !text.isEmpty, isLiveValidation {
             placeholderLabel.text = errorValidationHandler(text) ?? placeholder
         } else {
             placeholderLabel.text = placeholder
         }
-        placeholderLabel.font = placeholderFont
+        placeholderLabel.font = font
         placeholderLabel.textAlignment = textAlignment
 
         let size = placeholderLabel.sizeThatFits(bounds.size)
         placeholderLabel.frame.size.height = size.height
 
         if textFieldStateType == .entry && textStateType == .empty {
-            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y + placeholderEntryOffset.y, width: bounds.width, height: placeholderLabel.frame.height)
         } else if textFieldStateType == .entry && textStateType == .notEmpty {
-            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y + placeholderEntryOffset.y, width: bounds.width, height: placeholderLabel.frame.height)
             if !isLiveValidation {
                 placeholderLabel.textColor = placeholderColor
             }
         } else if textFieldStateType == .display && textStateType == .empty {
-            let textRectHeight = bounds.height - (placeholderLabel.bounds.height + 5)
+            let textRectHeight = bounds.height - (placeholderLabel.frame.height + 5)
             
             let offsetY: CGFloat
             switch placeholderAlignment {
@@ -347,16 +360,16 @@ import UIKit
                 offsetY = placeholderOffset.y
 
             case .center:
-                offsetY = placeholderLabel.bounds.height + textRectHeight / 2 - placeholderLabel.bounds.height + placeholderOffset.y
+                offsetY = placeholderLabel.frame.height + textRectHeight / 2 - placeholderLabel.frame.height + placeholderOffset.y
 
             case .bottom:
-                offsetY = placeholderLabel.bounds.height + (textRectHeight - placeholderLabel.bounds.height) / 2 + placeholderOffset.y
+                offsetY = placeholderLabel.frame.height + (textRectHeight - placeholderLabel.frame.height) / 2 + placeholderOffset.y
             }
             
-            let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.bounds.height)
+            let rect = CGRect(x: 0, y: offsetY, width: bounds.width, height: placeholderLabel.frame.height)
             placeholderLabel.frame = rect
         } else if textFieldStateType == .display && textStateType == .notEmpty {
-            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y, width: bounds.width, height: placeholderLabel.bounds.height)
+            placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y + placeholderEntryOffset.y, width: bounds.width, height: placeholderLabel.frame.height)
         }
         placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
     }
