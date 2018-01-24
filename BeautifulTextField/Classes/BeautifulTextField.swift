@@ -206,7 +206,7 @@ import UIKit
         let rect = super.textRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
+            offsetY = placeholderFont.lineHeight + 5
         } else {
             offsetY = 0
         }
@@ -219,7 +219,7 @@ import UIKit
         let rect = super.editingRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
+            offsetY = placeholderFont.lineHeight + 5
         } else {
             offsetY = 0
         }
@@ -233,7 +233,7 @@ import UIKit
         let rect = super.clearButtonRect(forBounds: bounds)
         let offsetY: CGFloat
         if let placeholderFont = placeholderFont {
-            offsetY = placeholderFont.lineHeight * placeholderLabel.transform.a + 2 + placeholderEntryOffset.y
+            offsetY = placeholderFont.lineHeight + 5
         } else {
             offsetY = 0
         }
