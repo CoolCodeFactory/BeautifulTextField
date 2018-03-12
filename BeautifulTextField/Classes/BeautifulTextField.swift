@@ -169,11 +169,13 @@ import UIKit
         
         let _topBorderView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth))
         _topBorderView.layer.cornerRadius = _topBorderView.bounds.height / 2
+        _topBorderView.autoresizingMask = .flexibleWidth
         addSubview(_topBorderView)
         topBorderView = _topBorderView
         
         let _bottomBorderView = UIView(frame: CGRect(x: 0, y: bounds.height - borderWidth, width: bounds.width, height: borderWidth))
         _bottomBorderView.layer.cornerRadius = _bottomBorderView.bounds.height / 2
+        _bottomBorderView.autoresizingMask = .flexibleWidth
         addSubview(_bottomBorderView)
         bottomBorderView = _bottomBorderView
         
