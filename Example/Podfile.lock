@@ -1,16 +1,16 @@
 PODS:
-  - BeautifulTextField (0.9.9)
+  - BeautifulTextField (0.9.10)
 
 DEPENDENCIES:
   - BeautifulTextField (from `../`)
 
 EXTERNAL SOURCES:
   BeautifulTextField:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  BeautifulTextField: 11ade2581c65f93c957b35392212bfd4cef83498
+  BeautifulTextField: c1af94e4326fb423011b3a78f93a95978df379a9
 
-PODFILE CHECKSUM: e5da792587ec69d79ec35c230d41427bef904765
+PODFILE CHECKSUM: 745736ca01ed5de05b00a1dc5c109fc110456ff2
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

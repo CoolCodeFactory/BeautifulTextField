@@ -163,9 +163,9 @@ import UIKit
     }
     
     internal func initialize() {
-        self.addTarget(self, action: #selector(textFieldDidBeginEditing), for: UIControlEvents.editingDidBegin)
-        self.addTarget(self, action: #selector(textFieldDidEndEditing), for: UIControlEvents.editingDidEnd)
-        self.addTarget(self, action: #selector(textFieldTextDidChange), for: UIControlEvents.editingChanged)
+        self.addTarget(self, action: #selector(textFieldDidBeginEditing), for: UIControl.Event.editingDidBegin)
+        self.addTarget(self, action: #selector(textFieldDidEndEditing), for: UIControl.Event.editingDidEnd)
+        self.addTarget(self, action: #selector(textFieldTextDidChange), for: UIControl.Event.editingChanged)
         
         let _topBorderView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: borderWidth))
         _topBorderView.layer.cornerRadius = _topBorderView.bounds.height / 2
@@ -196,9 +196,9 @@ import UIKit
     }
     
     deinit {
-        self.removeTarget(self, action: #selector(textFieldDidBeginEditing), for: UIControlEvents.editingDidBegin)
-        self.removeTarget(self, action: #selector(textFieldDidEndEditing), for: UIControlEvents.editingDidEnd)
-        self.removeTarget(self, action: #selector(textFieldTextDidChange), for: UIControlEvents.editingChanged)
+        self.removeTarget(self, action: #selector(textFieldDidBeginEditing), for: UIControl.Event.editingDidBegin)
+        self.removeTarget(self, action: #selector(textFieldDidEndEditing), for: UIControl.Event.editingDidEnd)
+        self.removeTarget(self, action: #selector(textFieldTextDidChange), for: UIControl.Event.editingChanged)
     }
     
     
@@ -213,7 +213,7 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        let rectWithInsets = finalRect.inset(by: textInsets)
         return rectWithInsets
     }
     
@@ -226,7 +226,7 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: 0, y: offsetY, width: rect.width, height: rect.height - offsetY)
-        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        let rectWithInsets = finalRect.inset(by: textInsets)
         return rectWithInsets
         
     }
@@ -240,7 +240,7 @@ import UIKit
             offsetY = 0
         }
         let finalRect = CGRect(x: rect.minX, y: offsetY, width: rect.width, height: rect.height)
-        let rectWithInsets = UIEdgeInsetsInsetRect(finalRect, textInsets)
+        let rectWithInsets = finalRect.inset(by: textInsets)
         return rectWithInsets
     }
     
@@ -353,7 +353,7 @@ import UIKit
         } else if textFieldStateType == .display && textStateType == .notEmpty {
             placeholderLabel.frame = CGRect(x: placeholderOffset.x, y: placeholderOffset.y + placeholderEntryOffset.y, width: bounds.width, height: placeholderLabel.frame.height)
         }
-        placeholderLabel.frame = UIEdgeInsetsInsetRect(placeholderLabel.frame, textInsets)
+        placeholderLabel.frame = placeholderLabel.frame.inset(by: textInsets)
     }
 
     
