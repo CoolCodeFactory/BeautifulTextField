@@ -190,7 +190,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BeautifulTextField_Example/Pods-BeautifulTextField_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-BeautifulTextField_Example/Pods-BeautifulTextField_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BeautifulTextField/BeautifulTextField.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -199,7 +199,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BeautifulTextField_Example/Pods-BeautifulTextField_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BeautifulTextField_Example/Pods-BeautifulTextField_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1AE96D2F4F54989081E27279 /* [CP] Check Pods Manifest.lock */ = {
